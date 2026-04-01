@@ -1,0 +1,18 @@
+const express = require("express");
+const env = require("./configs/dotenv");
+const connectDB = require("./configs/database");
+
+const PORT = env.PORT || 8081;
+const app = express();
+
+app.use(express.json());
+
+connectDB()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.log(`Error in connecting to database ${err.message}`);
+  });
