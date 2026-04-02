@@ -9,4 +9,10 @@ const plantRouter = express.Router();
  */
 plantRouter.post("/create-plant", plantControllers.createPlant);
 
+/*
+ * GET /api/plants/get-plants
+ * Get's all available plants
+ */
+plantRouter.get("/", plantControllers.getPlants);
+
 module.exports = plantRouter;

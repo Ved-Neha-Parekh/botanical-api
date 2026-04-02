@@ -43,7 +43,46 @@ const plantControllers = {
         },
       });
     } catch (error) {
-      return res.status(500).json({msg:error.message});
+      return res.status(500).json({ msg: error.message });
+    }
+  },
+
+  async getPlants(req, res) {
+    try {
+      const { page, limit } = req.query;
+      const pageNum = Number(page) || 1;
+      const limitNum = Number(limit) || 10;
+      const skip = (pageNum - 1) * limitNum;
+
+      // HOW PAGINATION WORKS FLOW OF SKIP AND LIMIT
+      // 1. SKIP: It tells the database to skip the first 'n' documents.
+      // 2. LIMIT: It tells the database to return only 'n' documents after skipping.
+      // 3. SORT: It tells the database to sort the documents in ascending or descending order.
+
+      // EXAMPLE
+      // page = 1, limit = 10, skip = (1 - 1) * 10 = 0
+      // page = 2, limit = 10, skip = (2 - 1) * 10 = 10
+      // page = 3, limit = 10, skip = (3 - 1) * 10 = 20
+      // page = 4, limit = 10, skip = (4 - 1) * 10 = 30
+
+      // WHY THIS FORMULA WHAT IS THE LOGIC BEHIND IT? 
+      // (page - 1) = This gives us the number of pages to skip.
+      // * limit = This gives us the number of documents to skip.
+
+      const plants = await Plant.find({ status: "AVAILABLE" })
+        .sort({ price: 1 })
+        .skip(skip)
+        .limit(limitNum);
+
+      if (!plants) {
+        return res.status(404).json({ msg: "No plants found." });
+      }
+
+      const totalPlants = await Plant.countDocuments({status:"AVAILABLE"});
+
+      return res.status(200).json({ msg: "Plants found successfully", totalPlants ,plants });
+    } catch (error) {
+      return res.status(500).json({ msg: error.message });
     }
   },
 };
