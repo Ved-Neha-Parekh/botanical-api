@@ -15,4 +15,10 @@ plantRouter.post("/create-plant", plantControllers.createPlant);
  */
 plantRouter.get("/", plantControllers.getPlants);
 
+/* 
+ * DELETE /api/plants/delete/:id
+ * Delete plant by Id
+ */
+plantRouter.delete("/delete/:id",plantControllers.deletePlant);
+
 module.exports = plantRouter;

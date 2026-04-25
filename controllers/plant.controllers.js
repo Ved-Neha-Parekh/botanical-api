@@ -65,11 +65,11 @@ const plantControllers = {
       // page = 3, limit = 10, skip = (3 - 1) * 10 = 20
       // page = 4, limit = 10, skip = (4 - 1) * 10 = 30
 
-      // WHY THIS FORMULA WHAT IS THE LOGIC BEHIND IT? 
+      // WHY THIS FORMULA WHAT IS THE LOGIC BEHIND IT?
       // (page - 1) = This gives us the number of pages to skip.
       // * limit = This gives us the number of documents to skip.
 
-      const plants = await Plant.find({ status: "AVAILABLE" })
+      const plants = await Plant.find({ status: "AVAILABLE", isDeleted: false })
         .sort({ price: 1 })
         .skip(skip)
         .limit(limitNum);
@@ -78,9 +78,28 @@ const plantControllers = {
         return res.status(404).json({ msg: "No plants found." });
       }
 
-      const totalPlants = await Plant.countDocuments({status:"AVAILABLE"});
+      const totalPlants = await Plant.countDocuments({ status: "AVAILABLE", isDeleted: false });
 
-      return res.status(200).json({ msg: "Plants found successfully", totalPlants ,plants });
+      return res
+        .status(200)
+        .json({ msg: "Plants found successfully", totalPlants, plants });
+    } catch (error) {
+      return res.status(500).json({ msg: error.message });
+    }
+  },
+
+  async deletePlant(req, res) {
+    try {
+      const plantId = req.params.id;
+
+      const plant = await Plant.findByIdAndUpdate(plantId, {
+        isDeleted: true,
+        deletedAt: Date.now(),
+      });
+      if (!plant) {
+        return res.status(404).json({ msg: "Plant not found" });
+      }
+      return res.status(200).json({ msg: "Plant deleted successfully." });
     } catch (error) {
       return res.status(500).json({ msg: error.message });
     }

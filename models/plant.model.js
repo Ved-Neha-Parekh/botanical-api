@@ -36,11 +36,18 @@ const plantSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
+    deletedAt: {
+      type: Date,
+      default: null,
+    },
   },
   {
     timestamps: true,
   },
 );
 
-
-module.exports = mongoose.model("Plants",plantSchema);
+module.exports = mongoose.model("Plants", plantSchema);
