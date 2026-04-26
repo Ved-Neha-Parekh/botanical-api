@@ -1,5 +1,5 @@
 const express = require("express");
-const plantControllers = require("../controllers/plant.controllers");
+const plantControllers = require("../controllers/plant.controller.js");
 
 const plantRouter = express.Router();
 

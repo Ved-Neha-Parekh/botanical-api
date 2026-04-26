@@ -2,6 +2,7 @@ const express = require("express");
 const env = require("./configs/dotenv");
 const connectDB = require("./configs/database");
 const plantRouter = require("./routes/plant.route");
+const authRouter = require("./routes/auth.route");
 
 const PORT = env.PORT || 8081;
 const app = express();
@@ -9,6 +10,7 @@ const app = express();
 app.use(express.json());
 
 app.use("/api/plants",plantRouter);
+app.use("/api/auth",authRouter);
 
 connectDB()
   .then(() => {
