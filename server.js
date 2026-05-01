@@ -3,10 +3,12 @@ const env = require("./configs/dotenv");
 const connectDB = require("./configs/database");
 const plantRouter = require("./routes/plant.route");
 const authRouter = require("./routes/auth.route");
+const rateLimiter = require("./middlewares/rate.limiter"); 
 
 const PORT = env.PORT || 8081;
 const app = express();
 
+app.use(rateLimiter);
 app.use(express.json());
 
 app.use("/api/plants",plantRouter);
